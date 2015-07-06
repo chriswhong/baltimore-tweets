@@ -1,0 +1,316 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+  <head>
+  <link rel="stylesheet" href="style.css" type="text/css">
+  <title>A Day in the Life... 24 Hours of Baltimore Tweets</title>
+
+
+    <script type="text/javascript" src=
+    "http://maps.google.com/maps/api/js?sensor=false">
+</script>
+
+    <script type="text/javascript">
+
+    var layer1;
+  	var map;
+
+    function initialize() {
+	
+
+//tweets
+	 var tableId1 = 5030907;
+	 //vacants
+	 var tableId2 = 5052519;
+	 //income
+	 var tableId3 = 5060070;
+	 
+	var locationColumn = 'geometry';
+
+
+	var mapStyles = [
+         {
+            featureType: "road",
+            elementType: "geometry",
+            stylers: [
+              { hue: "#8800ff" },
+              { lightness: 100 }
+            ]
+          },{
+            featureType: "road",
+            stylers: [
+              { visibility: "on" },
+              { hue: "#91ff00" },
+              { saturation: -62 },
+              { gamma: 1.98 },
+              { lightness: 45 }
+            ]
+          },{
+            featureType: "water",
+            stylers: [
+              { hue: "#005eff" },
+              { gamma: 0.72 },
+              { lightness: 42 }
+            ]
+          },{
+            featureType: "transit.line",
+            stylers: [
+              { visibility: "off" }
+            ]
+          },{
+            featureType: "administrative.locality",
+            stylers: [
+              { visibility: "on" }
+            ]
+          },{
+            featureType: "administrative.neighborhood",
+            elementType: "geometry",
+            stylers: [
+              { visibility: "simplified" }
+            ]
+          },{
+            featureType: "landscape",
+            stylers: [
+              { visibility: "on" },
+              { gamma: 0.41 },
+              { lightness: 46 }
+            ]
+          },{
+            featureType: "administrative.neighborhood",
+            elementType: "labels.text",
+            stylers: [
+              { visibility: "on" },
+              { saturation: 33 },
+              { lightness: 20 }
+            ]
+          }
+        ];
+    map = new google.maps.Map(document.getElementById('map_canvas'), {
+    center: new google.maps.LatLng(39.290734, -76.55),
+    zoom: 12,
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+	styles: mapStyles,
+    });
+
+	var georssLayer = new google.maps.KmlLayer('http://jfxart.com/baltimoreschools/countyboundaries.kml',{suppressInfoWindows: true,preserveViewport:true});
+georssLayer.setMap(map);
+	
+	
+    layer1 = new google.maps.FusionTablesLayer({
+          query: {
+            select: locationColumn,
+            from: tableId1
+          },
+		  styles: [{
+		   markerOptions: {
+		    iconName: "measle_turquoise"
+		   }
+		   
+		   },{
+		   
+		   where: "screenname = 'baltimore311'",
+		   markerOptions: {
+		    iconName: "small_yellow"
+		   }
+		   
+		   
+		  }],
+          map: map
+        });
+		//vacants layer
+		   layer2 = new google.maps.FusionTablesLayer({
+          query: {
+            select: locationColumn,
+            from: tableId2
+          },
+		  
+		   });
+		 //income layer
+		  layer3 = new google.maps.FusionTablesLayer({
+          query: {
+            select: locationColumn,
+            from: tableId3
+          }
+		 
+		  });
+        
+       
+
+
+
+	
+	
+	google.maps.event.addListener(layer1, 'click', function(e) {
+
+          // Change the content of the InfoWindow
+          e.infoWindowHtml = 
+		  "<div class = 'user'><a href = 'http://twitter.com/" + e.row['screenname'].value + "' target ='_blank'><div class='profilepic'><img src = '" +
+		  e.row['profilepic'].value + "'></div><div class='screenname'>@" + e.row['screenname'].value + "</a></div></div><div class='tweet'>" + e.row['tweet'].value + "</div><div class='created'>" + e.row['created'].value + "</div><div class='url'><a href = '" + e.row['url'].value + "' target ='_blank'>" + e.row['url'].value +"</a>";
+
+      
+        });
+	
+	
+	
+    }
+
+     function toggleLayer(this_layer)
+    {
+    if( this_layer.getMap() ){
+        this_layer.setMap(null);
+    }else{
+        this_layer.setMap(map);
+		changeMap(12);
+		
+    }
+	
+    }
+	
+	
+	function changeMap10(){
+      var searchString = document.getElementById('search-string-l0').value.replace(/'/g, "\\'");
+      layer1.setOptions({
+        query: {
+          select: "'geometry'",
+          from: 5030907,
+          where: "'tweet' CONTAINS IGNORING CASE '" + searchString + "'"
+        }
+      });
+    }
+	
+	function changeMapl1() {
+      var searchString = document.getElementById('search-string-l1').value.replace(/'/g, "\\'");
+      layer1.setOptions({
+        query: {
+          select: "'geometry'",
+          from: 5030907,
+          where: "'screenname' CONTAINS IGNORING CASE '" + searchString + "'"
+        }
+      });
+    }
+	
+	function changeMapl2() {
+
+      layer1.setOptions({
+        query: {
+          select: "'geometry'",
+          from: 5030907,
+         
+        }
+      });
+    }
+	
+    function toggleLayer(this_layer){
+	layer1.setMap(null);
+    if( this_layer.getMap() ){
+        this_layer.setMap(null);
+    }else{
+        this_layer.setMap(map);
+    }
+	layer1.setMap(map);
+    }
+
+    function clearLayer() {
+    if (currentLayer != null) {
+      currentLayer.setMap(null);
+    }
+    }
+	
+
+      
+
+	
+	
+	
+
+	
+	
+	
+	
+
+	
+	
+
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-21712852-6']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+
+  
+  
+	google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+  </head>
+  <body>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=252079801517521";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+  
+  <div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=252079801517521";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+  
+  
+    <div id="map_canvas"></div>
+	<div class="menu" id="menu">
+	<div class="topimg"><img src = "topimg.png"></div>
+	
+	<div class="key">
+	This is a colection of one full day of geotagged tweets in Baltimore City, August 27th, 2012 to be exact.  These 4392 messages are a glimpse into the lives of Baltimoreans of all walks of life.  Feel free to explore and learn.
+	</div>
+<div style="margin-top: 10px;">
+      <label>Filter by tweet text</label><input type="text" id="search-string-l0">
+      <input type="button" onclick="changeMap10()" value="Search">
+	  <label>Filter by Twitter name</label><input type="text" id="search-string-l1">
+      <input type="button" onclick="changeMapl1()" value="Search">
+	  <input type="button" onclick="changeMapl2()" value="Clear Filter"><br>
+    
+	<input value="layer2" id="check2" type="checkbox" onchange="toggleLayer(layer2);">Toggle Vacants<br>
+	<input value="layer3" id="check3" type="checkbox" onchange="toggleLayer(layer3);">Toggle Income Data<br>
+	</div>
+
+
+
+	<p>
+	This map is an experiment inspired by discussions on the <a href = "http://www.facebook.com/groups/baltimoretech/">Baltimore Tech</a> facebook page.  It contains an estimated 2-4% of all twitter traffic, as only a small handful of tweets are geotagged (these are usually sent from mobile devices)</p>
+	<p>
+	<a href = "http://www.wordle.net/show/wrdl/5614702/bmoretweets" target = "_blank">Here's a wordle</a> word cloud created from all of the tweets on this map.
+	</p>
+	
+	
+	<p>Google Fusion Table Map Development by <a href = "https://twitter.com/chris_whong">Chris Whong</a> of <a href = "http://www.charmcitynetworks.com">Charm City Networks</a><br>
+	Baltimore Tweet aggregation by <a href = "https://twitter.com/davetroy">Dave Troy</a><br>
+	Design inspiration from <a href = "http://map.baltimoretech.net/">Baltimore Tech Map</a> 
+	</p>
+	
+	<p>
+	Vacants Data: <a href = "https://data.baltimorecity.gov/" target = "_blank">OpenBaltimore</a><br>
+	Income Data: American Community Survey 2010 1-year Estimates, U.S. Census
+	
+	</p>
+	<div class="fb-like" data-href="http://www.charmcitynetworks.com/bmoretweets" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false"></div>
+	<a href="https://twitter.com/share" class="twitter-share-button" data-lang="en">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+	<div class="fb-comments" data-href="http://www.charmcitynetworks.com/bmoretweets/" data-num-posts="2" data-width="270"></div>
+	</div>
+	
+	
+	
+  </body>
+</html>
